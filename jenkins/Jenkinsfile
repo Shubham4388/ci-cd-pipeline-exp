@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "ci-cd-app"
+        PATH = "/usr/local/bin:/usr/bin:/bin"
     }
 
     stages {
