@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "ci-cd-app"
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+               git branch: 'main', url: 'https://github.com/Shubham4388/ci-cd-pipline-exp.git.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME -f docker/Dockerfile .'
+            }
+        }
+
+        stage('Testing Stage') {
+            steps {
+                sh '''
+                docker run -d --name test-container -p 8085:80 $IMAGE_NAME
+                sleep 3
+
+                RESPONSE=$(curl -s http://localhost:8085)
+
+                echo "Testing Response: $RESPONSE"
+
+                echo $RESPONSE | grep "CI/CD Demo" || exit 1
+
+                docker rm -f test-container
+                '''
+            }
+        }
+
+        stage('Deploy to Dev') {
+            steps {
+                sh '''
+                docker rm -f dev-container || true
+                docker run -d --name dev-container -p 8082:80 ci-cd-app
+                '''
+            }
+        }
+
+        stage('Deploy to Prod') {
+            steps {
+                sh '''
+                docker rm -f prod-container || true
+                docker run -d --name prod-container -p 9092:80 ci-cd-app
+                '''
+            }
+        }
+    }
+}
