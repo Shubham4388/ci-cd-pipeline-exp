@@ -9,7 +9,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-               git branch: 'main', url: 'https://github.com/Shubham4388/ci-cd-pipline-exp.git.git'
+               git branch: 'main', url: 'https://github.com/Shubham4388/ci-cd-pipline-exp.git'
             }
         }
 
