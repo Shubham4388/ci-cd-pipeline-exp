@@ -1,6 +1,6 @@
-#!/bin/bash
+/usr/local/bin/docker rm -f test-container || true
 
-docker run -d --name test-container -p 8085:80 ci-cd-app
+/usr/local/bin/docker run -d --name test-container -p 8085:80 ci-cd-app
 sleep 3
 
 RESPONSE=$(curl -s http://localhost:8085)
@@ -14,4 +14,4 @@ else
     exit 1
 fi
 
-docker rm -f test-container
+/usr/local/bin/docker rm -f test-container
